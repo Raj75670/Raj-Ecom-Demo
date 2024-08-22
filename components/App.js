@@ -1,19 +1,17 @@
-import React from 'react';
+"use client";
+
+import { React } from 'react';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
 
-interface AppProps {
-    children: any;
-}
-
-const App = ({ children }: AppProps) => {
+const App = (props) => {
     return (
         <>
             <Header />
-            <main>{children}</main>
+            <main>{props.children}</main>
             <Footer />
         </>
-    );
-};
+    )
+}
 
 export default App;

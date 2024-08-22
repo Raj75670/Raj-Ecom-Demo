@@ -1,66 +1,22 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-interface Filter {
-    label: string;
-    value: string;
-}
-
-interface FilterData {
-    title: string;
-    filters: Filter[];
-    noFilter: boolean;
-}
-
-interface AccordionWithFilterComponentProps {
-    handleProductFilter: (filter: { filters: string[]; searchQuery: string }) => void;
-    isDrawerOpen: boolean;
-}
-
-const filterData: FilterData[] = [
-    {
-        title: 'Search',
-        filters: [],
-        noFilter: true
-    },
-    {
-        title: 'Category',
-        filters: [
-            { label: 'Leather Purse', value: 'leather' },
-            { label: 'Normal Purse', value: 'normal' },
-            { label: 'Fancy Purse', value: 'fancy' }
-        ],
-        noFilter: false
-    },
-    {
-        title: 'Customer Ratings',
-        filters: [
-            { label: '5 Stars', value: '5' },
-            { label: '4 Stars', value: '4' },
-            { label: '3 Stars', value: '3' },
-            { label: '2 Stars', value: '2' },
-            { label: '1 Star', value: '1' },
-        ],
-        noFilter: false
-    }
-];
-
-function AccordionWithFilterComponent({ handleProductFilter, isDrawerOpen }: AccordionWithFilterComponentProps) {
-    const [activeIndexes, setActiveIndexes] = useState<number[]>([0]);
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>('');
+function AccordionWithFilterComponent({ handleProductFilter, isDrawerOpen }) {
+    const [activeIndexes, setActiveIndexes] = useState([0]);
+    const [selectedFilters, setSelectedFilters] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const router = useRouter();
     const searchParams = useSearchParams();
 
     useEffect(() => {
-        const filters = searchParams.get('filters')?.split(',') || [];
+        const filters = searchParams.get('filters') ? searchParams.get('filters').split(',') : [];
         const search = searchParams.get('q') || '';
 
         setSelectedFilters(filters);
         setSearchQuery(search);
         handleProductFilter({ filters, searchQuery: search });
-    }, [searchParams, handleProductFilter]);
+    }, []);
 
     useEffect(() => {
         const params = new URLSearchParams();
@@ -73,12 +29,12 @@ function AccordionWithFilterComponent({ handleProductFilter, isDrawerOpen }: Acc
             params.set('q', searchQuery);
         }
 
-        router.push(`?${params.toString()}`);
+        router.push(`?${params.toString()}`, { shallow: true });
 
         handleProductFilter({ filters: selectedFilters, searchQuery });
-    }, [selectedFilters, searchQuery, router, handleProductFilter]);
+    }, [selectedFilters, searchQuery]);
 
-    const toggleAccordion = (index: number) => {
+    const toggleAccordion = (index) => {
         setActiveIndexes((prevIndexes) =>
             prevIndexes.includes(index)
                 ? prevIndexes.filter((i) => i !== index)
@@ -86,16 +42,18 @@ function AccordionWithFilterComponent({ handleProductFilter, isDrawerOpen }: Acc
         );
     };
 
-    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFilterChange = (event) => {
         const { value, checked } = event.target;
-        setSelectedFilters((prevFilters) =>
-            checked
-                ? [...prevFilters, value]
-                : prevFilters.filter((filter) => filter !== value)
-        );
+        if (checked) {
+            setSelectedFilters((prevFilters) => [...prevFilters, value]);
+        } else {
+            setSelectedFilters((prevFilters) =>
+                prevFilters.filter((filter) => filter !== value)
+            );
+        }
     };
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
 
@@ -141,7 +99,7 @@ function AccordionWithFilterComponent({ handleProductFilter, isDrawerOpen }: Acc
                                         value={filter.value}
                                         id={`filter-${index}-${i}`}
                                         className="mr-2 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                                        onChange={handleFilterChange}
+                                        onChange={(e) => handleFilterChange(e)}
                                         checked={selectedFilters.includes(filter.value)}
                                     />
                                     <label htmlFor={`filter-${index}-${i}`} className="text-gray-700">
@@ -157,10 +115,38 @@ function AccordionWithFilterComponent({ handleProductFilter, isDrawerOpen }: Acc
     );
 }
 
-export default function AccordionWithFilter(props: AccordionWithFilterComponentProps) {
+export default function AccordionWithFilter(props) {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <AccordionWithFilterComponent {...props} />
         </Suspense>
     );
 }
+
+const filterData = [
+    {
+        title: 'Search',
+        filters: [],
+        noFilter: true
+    },
+    {
+        title: 'Category',
+        filters: [
+            { label: 'Leather Purse', value: 'leather' },
+            { label: 'Normal Purse', value: 'normal' },
+            { label: 'Fancy Purse', value: 'fancy' }
+        ],
+        noFilter: false
+    },
+    {
+        title: 'Customer Ratings',
+        filters: [
+            { label: '5 Stars', value: '5' },
+            { label: '4 Stars', value: '4' },
+            { label: '3 Stars', value: '3' },
+            { label: '2 Stars', value: '2' },
+            { label: '1 Star', value: '1' },
+        ],
+        noFilter: false
+    }
+];
