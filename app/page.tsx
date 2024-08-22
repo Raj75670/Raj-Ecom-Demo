@@ -85,7 +85,7 @@ export default function Page() {
 
       <div className="flex flex-col min-h-screen">
         <div className="flex flex-1 gap-[1rem]">
-          <Sidebar handleProductFilter={handleProductFilter} />
+          <Sidebar handleProductFilter={handleProductFilter} isDrawerOpen={false} />
           <div className="flex-1">
             <ProductGrid selectedFilters={selectedFilters} searchQuery={searchQuery} sortOption={sortOption} />
           </div>
