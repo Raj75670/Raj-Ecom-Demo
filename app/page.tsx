@@ -4,19 +4,24 @@ import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar/Sidebar';
 import ProductGrid from '../components/ProductGrid/ProductGrid';
 
-export default function Page() {
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState('');
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+interface FilterProps {
+  filters: string[];
+  searchQuery: string;
+}
 
-  const handleProductFilter = ({ filters, searchQuery }) => {
+export default function Page() {
+  const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortOption, setSortOption] = useState<string>('');
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const handleProductFilter = ({ filters, searchQuery }: FilterProps) => {
     setSelectedFilters(filters);
     setSearchQuery(searchQuery);
   }
 
-  const handleSort = (option) => {
+  const handleSort = (option: string) => {
     setSortOption(option);
     setIsSortOpen(false);
   };
@@ -28,9 +33,10 @@ export default function Page() {
   return (
     <div className='container mx-auto px-[1rem] md:px-0'>
       <div className='text-center py-[2rem]'>
-        <h1 className='text-4xl	text-[#252020]'>Bags</h1>
+        <h1 className='text-4xl text-[#252020]'>Bags</h1>
         <p className='text-xl my-[1rem] px-[4rem] line-clamp-2 md:line-clamp-none'>
-          Bags are versatile and practical accessories designed for carrying and transporting various items, ranging from personal belongings to groceries, laptops, books, and more.</p>
+          Bags are versatile and practical accessories designed for carrying and transporting various items, ranging from personal belongings to groceries, laptops, books, and more.
+        </p>
       </div>
 
       <div className='border-t border-b border-[#e5e5e5] py-[1rem]'>

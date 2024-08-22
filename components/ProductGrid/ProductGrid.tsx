@@ -1,4 +1,13 @@
-export default function ProductGrid({ selectedFilters, searchQuery, sortOption }) {
+import React from 'react';
+
+interface ProductGridProps {
+    selectedFilters: string[];
+    searchQuery: string;
+    sortOption: string;
+}
+
+const ProductGrid: React.FC<ProductGridProps> = ({ selectedFilters, searchQuery, sortOption }) => {
+    // Filter products based on selectedFilters and searchQuery
     const filteredProducts = products.filter(product =>
         (selectedFilters.length === 0 || selectedFilters.includes(product.category) || selectedFilters.includes(product.rating)) &&
         (searchQuery === '' || product.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -15,18 +24,18 @@ export default function ProductGrid({ selectedFilters, searchQuery, sortOption }
     });
 
     return (
-        <div className={`${sortedProducts?.length > 0 ? `grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 py-[1.5rem]` : 'flex items-center justify-center min-h-[50%]'}`}>
-            {sortedProducts?.length > 0 ? sortedProducts.map((product) => (
+        <div className={`${sortedProducts.length > 0 ? 'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 py-[1.5rem]' : 'flex items-center justify-center min-h-[50%]'}`}>
+            {sortedProducts.length > 0 ? sortedProducts.map((product) => (
                 <div key={product.id} className="rounded-lg overflow-hidden">
                     <img src={product.imageUrl} alt={product.name} className="w-full h-[250px] md:h-[350px] object-cover cursor-pointer" />
                     <div className="py-[1rem]">
-                        <p className="font-bold	text-base uppercase text-[#252020] mb-[0.5rem] line-clamp-1 cursor-pointer">{product.name}</p>
+                        <p className="font-bold text-base uppercase text-[#252020] mb-[0.5rem] line-clamp-1 cursor-pointer">{product.name}</p>
                         <p className="font-extrabold text-lg text-[#252020]">{product.price}</p>
                     </div>
                 </div>
             )) :
                 <div className="flex items-center flex-col justify-center min-h-[50%]">
-                    <img src='/images/No-data.jpg' />
+                    <img src='/images/No-data.jpg' alt='No data' />
                     <p className="text-xl font-semibold text-center">
                         We do not have any products matching your filters. Try clearing a few filters or view all products.
                     </p>
@@ -35,6 +44,8 @@ export default function ProductGrid({ selectedFilters, searchQuery, sortOption }
         </div>
     );
 }
+
+export default ProductGrid;
 
 const products = [
     { id: 1, name: 'Rug Patch Leather Tote Bag', rating: '5', sort: 'highprice', price: '₹ 3800', category: 'leather', imageUrl: 'https://rukminim2.flixcart.com/image/612/612/xif0q/clutch/v/0/7/-original-imagzy3caztpxepm.jpeg' },

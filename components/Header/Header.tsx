@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Header = () => {
-    const headerData = ['shop', 'stories', 'skills', 'category', 'about'];
+const Header: React.FC = () => {
+    const headerData: string[] = ['shop', 'stories', 'skills', 'category', 'about'];
 
     return (
         <div className='container mx-auto'>
